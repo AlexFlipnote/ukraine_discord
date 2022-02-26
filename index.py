@@ -4,7 +4,7 @@ import time
 import traceback
 import random
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from colorama import Fore, Style
 from bs4 import BeautifulSoup
 
@@ -91,10 +91,22 @@ def write_json(**kwargs):
 
 def webhook(html_content: Article):
     """ Send webhook to Discord """
+    utc_timestamp = datetime.utcnow()
+    ukraine_timestamp = utc_timestamp + timedelta(hours=3)
+    timestamp_string = "%d/%m/%Y %H:%M"
+
     embed = {
-        "title": "New update",
+        "author": {
+            "name": "New update about ukraine",
+            "url": "https://github.com/AlexFlipnote/ukraine_discord",
+        },
         "color": 0xf1c40f,
-        "thumbnail": {"url": "https://cdn.discordapp.com/emojis/691373958087442486.png"}
+        "thumbnail": {"url": "https://cdn.discordapp.com/emojis/691373958087442486.png"},
+        "fields": [{
+            "name": "Timezones",
+            "value": f"🇬🇧 {utc_timestamp.strftime(timestamp_string)}\n🇺🇦 {ukraine_timestamp.strftime(timestamp_string)}",
+            "inline": False
+        }]
     }
 
     if html_content.source:
