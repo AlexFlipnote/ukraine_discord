@@ -9,7 +9,7 @@ The bot is currently running and posting news right now as an example inside [my
 - Discord webhook URL
 
 # Embed Attachment
-Don't like the embed attachment? Set "embed_image" in the config file to "false".
+Don't like the embed attachment? Set "embed_image" in the config file to False (make sure it's a boolean).
 
 ## Example outputs
 ![](https://i.alexflipnote.dev/P1967aY.png)

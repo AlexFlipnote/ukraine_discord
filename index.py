@@ -116,10 +116,8 @@ def webhook(html_content: Article):
         embed["description"] = f"ℹ️ Unable to find source...\n{html_content.info}"
 
     image = html_content.image or html_content.feed_img or None
-    if image:
-        imageVar = read_json()["embed_image"]
-        if imageVar == "true":
-            embed["image"] = {"url": image}
+    if image and read_json()["embed_image"]:
+        embed["image"] = {"url": image}
     if html_content.video:
         embed["description"] += f"\n\n> Warning: Can be graphical, view at own risk\n[Twitter video]({html_content.video})"
 
