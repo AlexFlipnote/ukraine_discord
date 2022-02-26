@@ -26,21 +26,22 @@ class Feed:
     @property
     def video(self):
         """ Returns the video url if available """
+        main_video = self.html.attrs.get("data-twitpic", None)
+        if main_video and "video" in main_video:
+            return main_video
+
         find_video = self.html.find("blockquote", {"class": "twitter-video"})
         if not find_video:
             return None
         return find_video.find("a").attrs.get("href", None)
 
     @property
-    def feed_img(self):
+    def image(self):
         """ Get the image of the feed """
         find_img = self.html.find("div", {"class": "img"})
         if not find_img:
             return None
-        get_img = find_img.find("img")
-        if not get_img:
-            return None
-        return get_img.attrs.get("src", None)
+        return find_img.find("img").attrs.get("src", None)
 
 
 class Article:
@@ -48,11 +49,11 @@ class Article:
         self.html = html_data
         self.feed = feed
 
+        self.image = feed.image
         self.info = feed.info
         self.id = feed.id
         self.extra = feed.extra
         self.video = feed.video
-        self.feed_img = feed.feed_img
 
     @property
     def source(self):
@@ -61,17 +62,6 @@ class Article:
         if not html:
             return None
         return html.attrs.get("href", None)
-
-    @property
-    def image(self):
-        """ Get the image from the article """
-        has_img = self.html.find("div", {"class": "popup_imgi"})
-        if not has_img:
-            return None
-        get_img = has_img.find("img")
-        if not get_img:
-            return None
-        return get_img.attrs.get("src", None)
 
 
 def read_json(key: str = None, default=None):
