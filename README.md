@@ -9,6 +9,6 @@ The bot is currently running and posting news right now as an example inside [my
 - Discord webhook URL
 
 ## Example outputs
-![](https://i.alexflipnote.dev/A2eAB5G.png)
+![](https://i.alexflipnote.dev/P1967aY.png)
 
 ![](https://i.alexflipnote.dev/7CvYAAB.png)
