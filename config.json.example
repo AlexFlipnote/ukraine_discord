@@ -1,5 +1,6 @@
 {
   "webhook_url": "https://discord.com/api/webhooks/.....",
   "user_agent": "Mozilla/5.0...",
-  "last_id": "null"
+  "embed_image": true,
+  "last_id": "22398889"
 }

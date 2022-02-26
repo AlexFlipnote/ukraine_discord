@@ -8,8 +8,13 @@ The bot is currently running and posting news right now as an example inside [my
 - Python 3.6 or higher
 - Discord webhook URL
 
-# Embed Attachment
-Don't like the embed attachment? Set "embed_image" in the config file to False (make sure it's a boolean).
+## Config file
+| Variable | Description |
+| --- | --- |
+| embed_image | Define if images should be shown in embed or not (Bool) |
+| last_id | Let it stay, code takes advantage of this to keep record |
+| user_agent | Make custom User-Agent for requests |
+| webhook_url | Discord webhook URL from your Discord |
 
 ## Example outputs
 ![](https://i.alexflipnote.dev/P1967aY.png)

@@ -74,10 +74,13 @@ class Article:
         return get_img.attrs.get("src", None)
 
 
-def read_json():
-    """ Read the config.json file """
+def read_json(key: str = None, default=None):
+    """ Read the config.json file, also define default key for keys """
     with open("./config.json", "r") as f:
-        return json.load(f)
+        data = json.load(f)
+    if key:
+        return data.get(key, default)
+    return data
 
 
 def write_json(**kwargs):
@@ -116,13 +119,13 @@ def webhook(html_content: Article):
         embed["description"] = f"ℹ️ Unable to find source...\n{html_content.info}"
 
     image = html_content.image or html_content.feed_img or None
-    if image and read_json().get("embed_image", False):
+    if image and read_json("embed_image", True):
         embed["image"] = {"url": image}
     if html_content.video:
         embed["description"] += f"\n\n> Warning: Can be graphical, view at own risk\n[Twitter video]({html_content.video})"
 
     return requests.post(
-        read_json()["webhook_url"],
+        read_json("webhook_url", None),
         headers={"Content-Type": "application/json"},
         data=json.dumps({"content": None, "embeds": [embed]}),
     )
@@ -143,7 +146,7 @@ def fetch(url: str):
     """ Simply fetch any URL given, and convert from bytes to string """
     r = requests.get(
         url, headers={
-            "User-Agent": read_json()["user_agent"],
+            "User-Agent": read_json("user_agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"),
             "Content-Type": "text/html; charset=UTF-8",
         }
     )
@@ -175,7 +178,7 @@ def main():
                 continue
 
             news = Feed(latest_news)
-            if news.id != read_json()["last_id"]:
+            if news.id != read_json("last_id", None):
                 pretty_print("+", "New article found, checking article...")
                 r_extra = fetch(news.extra)
                 extra_html = BeautifulSoup(r_extra, "html.parser")
