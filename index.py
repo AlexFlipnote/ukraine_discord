@@ -98,6 +98,7 @@ def webhook(html_content: Article):
     embed = {
         "author": {
             "name": "New update about ukraine",
+            # please don't remove this <3
             "url": "https://github.com/AlexFlipnote/ukraine_discord",
         },
         "color": 0xf1c40f,
