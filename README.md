@@ -11,4 +11,4 @@ The bot is currently running and posting news right now as an example inside [my
 ## Example outputs
 ![](https://i.alexflipnote.dev/P1967aY.png)
 
-![](https://i.alexflipnote.dev/7CvYAAB.png)
+![](https://i.alexflipnote.dev/4Ty6Yb3.png)
