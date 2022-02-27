@@ -41,7 +41,10 @@ class Feed:
         find_img = self.html.find("div", {"class": "img"})
         if not find_img:
             return None
-        return find_img.find("img").attrs.get("src", None)
+        try:
+            return find_img.find("img").attrs.get("src", None)
+        except AttributeError:
+            return None
 
 
 class Article:
@@ -108,9 +111,8 @@ def webhook(html_content: Article):
     else:
         embed["description"] = f"ℹ️ Unable to find source...\n{html_content.info}"
 
-    image = html_content.image or html_content.feed_img or None
-    if image and read_json("embed_image", True):
-        embed["image"] = {"url": image}
+    if html_content.image and read_json("embed_image", True):
+        embed["image"] = {"url": html_content.image}
     if html_content.video:
         embed["description"] += f"\n\n> Warning: Can be graphical, view at own risk\n[Twitter video]({html_content.video})"
 
