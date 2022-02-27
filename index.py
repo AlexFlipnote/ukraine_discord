@@ -89,7 +89,10 @@ def webhook(html_content: Article):
     """ Send webhook to Discord """
     utc_timestamp = datetime.utcnow()
     ukraine_timestamp = utc_timestamp + timedelta(hours=2)
-    timestamp_string = "%d/%m/%Y %H:%M"
+    timestamp_string = "%d/%m/%Y %H:%M | %I:%M %p"
+
+    now_unix = int(time.time())
+    discord_timestamps = f"<t:{now_unix}:d> <t:{now_unix}:t>"
 
     embed = {
         "author": {
@@ -101,7 +104,11 @@ def webhook(html_content: Article):
         "thumbnail": {"url": "https://cdn.discordapp.com/emojis/691373958087442486.png"},
         "fields": [{
             "name": "Timezones",
-            "value": f"🇬🇧 {utc_timestamp.strftime(timestamp_string)}\n🇺🇦 {ukraine_timestamp.strftime(timestamp_string)}",
+            "value": "\n".join([
+                f"🇬🇧 {utc_timestamp.strftime(timestamp_string)}",
+                f"🇺🇦 {ukraine_timestamp.strftime(timestamp_string)}",
+                f"🌍 {discord_timestamps}"
+            ]),
             "inline": False
         }]
     }
