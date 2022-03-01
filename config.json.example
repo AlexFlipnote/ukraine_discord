@@ -2,7 +2,6 @@
   "webhook_url": "https://discord.com/api/webhooks/.....",
   "user_agent": "Mozilla/5.0...",
   "embed_image": true,
-  "cookie": "cookies yes",
-  "last_id": "22398889",
+  "last_id": "do not change this, ever",
   "debug": false
 }

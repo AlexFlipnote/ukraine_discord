@@ -1,9 +1,6 @@
 # ukraine_discord
 A script that gets the news from liveuamap.com to post is on Discord as a webhook
 
-> liveuamap.com has added CloudFlare detection, so this does not work atm
-> Tried multiple ways to fix this
-
 # Live view
 The bot is currently running and posting news right now as an example inside [my personal Discord server](https://discord.gg/AlexFlipnote), inside the channel `#general_whatever` within the thread called `Ukraine Vs Russia - Discussion and News`.
 
@@ -18,6 +15,7 @@ The bot is currently running and posting news right now as an example inside [my
 | last_id | Let it stay, code takes advantage of this to keep record |
 | user_agent | Make custom User-Agent for requests |
 | webhook_url | Discord webhook URL from your Discord |
+| debug | Debug mode, true/false |
 
 ## Example outputs
 ![](https://i.alexflipnote.dev/P1967aY.png)
