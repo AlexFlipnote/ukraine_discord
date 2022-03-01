@@ -12,7 +12,6 @@ The bot is currently running and posting news right now as an example inside [my
 | Variable | Description |
 | --- | --- |
 | embed_image | Define if images should be shown in embed or not (Bool) |
-| last_id | Let it stay, code takes advantage of this to keep record |
 | user_agent | Make custom User-Agent for requests |
 | webhook_url | Discord webhook URL from your Discord |
 | debug | Debug mode, true/false |

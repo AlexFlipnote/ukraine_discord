@@ -8,6 +8,11 @@ import random
 from datetime import datetime, timedelta
 from colorama import Fore, Style
 from bs4 import BeautifulSoup
+from utils import sqlite
+
+
+db = sqlite.Database()
+db.create_tables()  # Attempt to create table(s) if not exists already.
 
 
 def traceback_maker(err):
@@ -92,7 +97,8 @@ def debug_html(content: str):
         if not os.path.exists("./debug"):
             os.mkdir("./debug")
         with open(f"./debug/debug_{int(time.time())}.html", "w", encoding="utf8") as f:
-            f.write(content)
+            html = BeautifulSoup(content, "html.parser")
+            f.write(html.prettify())
 
 
 def webhook(html_content: Article):
@@ -153,7 +159,6 @@ def pretty_print(symbol: str, text: str):
 
 def fetch(url: str):
     """ Simply fetch any URL given, and convert from bytes to string """
-    # cookies=read_json("cookies", {})
     r = requests.get(
         url, headers={
             "User-Agent": read_json("user_agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)")
@@ -188,12 +193,20 @@ def main():
                 continue
 
             news = Feed(latest_news)
-            if news.id != read_json("last_id", None):
+            data = db.fetchrow("SELECT * FROM articles WHERE post_id=?", (news.id,))
+
+            if not data:
                 pretty_print("+", "New article found, checking article...")
                 r_extra = fetch(news.extra)
                 extra_html = BeautifulSoup(r_extra, "html.parser")
-                webhook(Article(news, extra_html))
-                write_json(last_id=news.id)
+                article = Article(news, extra_html)
+
+                webhook(article)
+                db.execute(
+                    "INSERT INTO articles (post_id, text, source, video, image) VALUES (?, ?, ?, ?, ?)",
+                    (article.id, article.info, article.source, article.video, article.image)
+                )
+
                 pretty_print("!", news.info)
             else:
                 pretty_print("-", f"Found no news... waiting {check_in_rand} seconds")
