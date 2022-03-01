@@ -7,7 +7,7 @@ import random
 
 from datetime import datetime, timedelta
 from colorama import Fore, Style
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, element
 from utils import sqlite
 
 
@@ -27,7 +27,7 @@ class Feed:
         self.html = html_data
         self.info = html_data.find("div", {"class": "title"}).text
         self.id = html_data.attrs.get("data-id", None)
-        self.extra = html_data.find("a", {"data-id": self.id, "class": "comment-link"}).attrs.get("href", None)
+        self.extra = html_data.attrs.get("data-link", None)
 
     @property
     def video(self):
@@ -184,7 +184,11 @@ def main():
 
             try:
                 feeder = html.find("div", {"id": "feedler"})
-                latest_news = next((g for g in feeder), None)
+                latest_news_sorted = sorted(
+                    [g for g in feeder if isinstance(g, element.Tag)],
+                    key=lambda g: g.attrs.get("data-time", 0), reverse=True
+                )
+                latest_news = latest_news_sorted[0]
             except TypeError:
                 # For some weird reason, this website loves to crash with HTTP 5XX
                 # So we just try again because the website encourages us to, really.
