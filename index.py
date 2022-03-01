@@ -1,6 +1,7 @@
 import requests
 import json
 import time
+import os
 import traceback
 import random
 
@@ -85,6 +86,15 @@ def write_json(**kwargs):
         json.dump(data, f, indent=2)
 
 
+def debug_html(content: str):
+    debug = read_json("debug", False)
+    if debug:
+        if not os.path.exists("./debug"):
+            os.mkdir("./debug")
+        with open(f"./debug/debug_{int(time.time())}.html", "w", encoding="utf8") as f:
+            f.write(content)
+
+
 def webhook(html_content: Article):
     """ Send webhook to Discord """
     utc_timestamp = datetime.utcnow()
@@ -143,13 +153,29 @@ def pretty_print(symbol: str, text: str):
 
 def fetch(url: str):
     """ Simply fetch any URL given, and convert from bytes to string """
+    # cookies=read_json("cookies", {})
     r = requests.get(
         url, headers={
             "User-Agent": read_json("user_agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"),
-            "Content-Type": "text/html; charset=UTF-8",
+            "Content-Type": "application/x-www-form-urlencoded",
+            "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+            "accept-encoding": "gzip, deflate, br",
+            "accept-language": "en-GB,en;q=0.9,nb-NO;q=0.8,nb;q=0.7,no;q=0.6",
+            "cache-control": "max-age=0",
+            "cookie": read_json("cookie", "none"),
+            "referer": "https://liveuamap.com/",
+            "sec-ch-ua": '" Not A;Brand";v="99", "Chromium";v="98", "Google Chrome";v="98"',
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": "Windows",
+            "sec-fetch-dest": "document",
+            "sec-fetch-mode": "navigate",
+            "sec-fetch-site": "same-origin",
+            "sec-fetch-user": "?1",
+            "upgrade-insecure-requests": "1"
         }
     )
     text = r.content.decode("utf-8")
+    debug_html(text)
     return text
 
 

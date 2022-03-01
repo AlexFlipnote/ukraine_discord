@@ -1,5 +1,6 @@
 pm2.json
 config.json
+debug/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
