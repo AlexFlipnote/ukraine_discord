@@ -188,7 +188,6 @@ def main():
                     [g for g in feeder if isinstance(g, element.Tag)],
                     key=lambda g: g.attrs.get("data-time", 0), reverse=True
                 )
-                latest_news = latest_news_sorted[0]
             except TypeError:
                 # For some weird reason, this website loves to crash with HTTP 5XX
                 # So we just try again because the website encourages us to, really.
@@ -196,24 +195,28 @@ def main():
                 time.sleep(5)
                 continue
 
-            news = Feed(latest_news)
-            data = db.fetchrow("SELECT * FROM articles WHERE post_id=?", (news.id,))
+            posted_something = False
+            for entry in range(read_json("article_fetch_limit", 5)):
+                news = Feed(latest_news_sorted[entry])
+                data = db.fetchrow("SELECT * FROM articles WHERE post_id=?", (news.id,))
 
-            if not data:
-                pretty_print("+", "New article found, checking article...")
-                r_extra = fetch(news.extra)
-                extra_html = BeautifulSoup(r_extra, "html.parser")
-                article = Article(news, extra_html)
+                if not data:
+                    posted_something = True
+                    pretty_print("+", "New article found, checking article...")
+                    r_extra = fetch(news.extra)
+                    extra_html = BeautifulSoup(r_extra, "html.parser")
+                    article = Article(news, extra_html)
 
-                webhook(article)
-                db.execute(
-                    "INSERT INTO articles (post_id, text, source, video, image) VALUES (?, ?, ?, ?, ?)",
-                    (article.id, article.info, article.source, article.video, article.image)
-                )
+                    webhook(article)
+                    db.execute(
+                        "INSERT INTO articles (post_id, text, source, video, image) VALUES (?, ?, ?, ?, ?)",
+                        (article.id, article.info, article.source, article.video, article.image)
+                    )
 
-                pretty_print("!", news.info)
-            else:
+                    pretty_print("!", news.info)
+            if not posted_something:
                 pretty_print("-", f"Found no news... waiting {check_in_rand} seconds")
+
         except Exception as e:
             pretty_print("!", traceback_maker(e))
 

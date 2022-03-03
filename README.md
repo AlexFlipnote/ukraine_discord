@@ -14,6 +14,7 @@ The bot is currently running and posting news right now as an example inside [my
 | embed_image | Define if images should be shown in embed or not (Bool) |
 | user_agent | Make custom User-Agent for requests |
 | webhook_url | Discord webhook URL from your Discord |
+| article_fetch_limit | How many articles it will go through to see if anything's new |
 | debug | Debug mode, true/false |
 
 ## Example outputs
