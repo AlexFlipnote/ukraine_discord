@@ -65,6 +65,22 @@ class Article:
         self.video = feed.video
 
     @property
+    def category_colour(self):
+        """ If the article is friendly or bad/warning """
+        classes = self.feed.html.attrs.get("class", "None")  # Get the classes of the feed, use "None" string so it doesn't crash
+        if "cat1" in classes:
+            return (  # Not good news
+                0xe74c3c, "https://cdn.discordapp.com/emojis/691373958498484274.png"
+            )
+        elif "cat2" in classes:
+            return (  # Better news lol
+                0xf1c40f, "https://cdn.discordapp.com/emojis/691373958087442486.png"
+            )
+        return (  # Default colour, just in case I guess...?
+            0xecf0f1, "https://cdn.discordapp.com/emojis/944915017340440586.png"
+        )
+
+    @property
     def source(self):
         """ Get the source of the article """
         html = self.html.find("a", {"class": "source-link"})
@@ -110,14 +126,15 @@ def webhook(html_content: Article):
     now_unix = int(time.time())
     discord_timestamps = f"<t:{now_unix}:d> <t:{now_unix}:t>"
 
+    cat_colour, cat_img = html_content.category_colour
+
     embed = {
         "author": {
             "name": "New update about Ukraine",
             # please don't remove this <3
             "url": "https://github.com/AlexFlipnote/ukraine_discord",
         },
-        "color": 0xf1c40f,
-        "thumbnail": {"url": "https://cdn.discordapp.com/emojis/691373958087442486.png"},
+        "color": cat_colour, "thumbnail": {"url": cat_img},
         "fields": [{
             "name": "Timezones",
             "value": "\n".join([

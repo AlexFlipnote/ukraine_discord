@@ -8,6 +8,10 @@ The bot is currently running and posting news right now as an example inside [my
 - Python 3.6 or higher
 - Discord webhook URL
 
+# Credits
+- [Atomikkunn](https://github.com/Atomikkunn)
+  - Figuring out how to check what category each posts are
+
 ## Config file
 | Variable | Description |
 | --- | --- |
