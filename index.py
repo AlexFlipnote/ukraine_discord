@@ -186,6 +186,21 @@ def fetch(url: str):
     return text
 
 
+def _check_cloudflare(html: BeautifulSoup) -> None:
+    _possible_errors = ['denied', 'Cloudflare']
+    title = html.find('title')
+    has_cloudflare_issues = False
+    if title is not None:
+        for _possible_error in _possible_errors:
+            if _possible_error.lower() in title.text.lower():
+                has_cloudflare_issues = True
+                break
+
+    if has_cloudflare_issues:
+        pretty_print("!", "Failed because of Cloudflare protection!")
+        raise ValueError(title.text)
+
+
 def main():
     while True:
         try:
@@ -198,6 +213,7 @@ def main():
 
             r = fetch("https://liveuamap.com/")
             html = BeautifulSoup(r, "html.parser")
+            _check_cloudflare(html)
 
             try:
                 feeder = html.find("div", {"id": "feedler"})
